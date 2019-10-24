@@ -51,17 +51,18 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} validate>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
+            id="asdf"
             label="Email Address"
             name="email"
             autoComplete="email"
             autoFocus
+            value=""
           />
           <TextField
             variant="outlined"
@@ -71,8 +72,9 @@ export default function SignIn() {
             name="password"
             label="Password"
             type="password"
-            id="password"
+            id="ghjk"
             autoComplete="current-password"
+            value=""
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
