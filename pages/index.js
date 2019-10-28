@@ -12,6 +12,30 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
+import cookieParser from 'cookie-parser'
+import csrf from 'csurf'
+import bodyParser from 'body-parser'
+import express from 'express'
+
+// setup route middlewares
+var csrfProtection = csrf({ cookie: true })
+var parseForm = bodyParser.urlencoded({ extended: false })
+
+// create express app
+var app = express()
+
+// parse cookies
+// we need this because "cookie" is true in csrfProtection
+app.use(cookieParser())
+
+app.get('/form', csrfProtection, function (req, res) {
+  // pass the csrfToken to the view
+  res.render('send', { csrfToken: req.csrfToken() })
+})
+
+app.post('/process', parseForm, csrfProtection, function (req, res) {
+  res.send('data is being processed')
+})
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -51,18 +75,18 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} validate>
+        <form action= "/process" method="POST" className={classes.form} validate>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="asdf"
-            label="Email Address"
             name="email"
+            label="Email Address"
+            type="text"
+            id="email"
             autoComplete="email"
-            autoFocus
-            value=""
+            value={csrfToken}
           />
           <TextField
             variant="outlined"
@@ -71,10 +95,10 @@ export default function SignIn() {
             fullWidth
             name="password"
             label="Password"
-            type="password"
-            id="ghjk"
+            type="text"
+            id="password"
             autoComplete="current-password"
-            value=""
+            value={csrfToken}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
